@@ -177,9 +177,260 @@ The -e flag checks whether the file is existing or not.
     fi
 ``` 
 
-If we want to check whether the argument passed, is a file or not, we can use -f flag.
+If we want to check whether the argument passed, is a file or not, we can use -f flag. To check whether a file has write permission or not, we use the -w flag.
 
 To check whether a directory exists or not, we can use the -d flag.
+
+## Logical Operators
+
+The logical and operator is written in this manner :
+
+```zsh
+
+    count=10
+
+    if [ "$count" > "9" ] && [ "$count" == "10" ]
+    then
+        echo "Condition satisfied"
+    fi
+```
+
+The logical operator is written in the same manner. The operator is '||'
+
+## Perform Mathematical Operations
+
+```zsh
+
+    num1=10
+    num2=15
+
+    echo $(( num1+num2 ))
+```
+
+If we go for complex mathematical operations like square root and floating point operations, we write like this :
+
+```zsh
+
+    echo "20.5+5" | bc
+    echo "sqrt($num)" | bc -l
+```
+
+The | operator acts such that the result of the mathematical operation acts as input for the bc variable. Then the bc variable is printed. For square root or exponentiation operations, we need to use the math library, and for that we use the -l flag.
+
+## The case statement
+
+```zsh
+
+    args=("$@")
+
+    case ${ args[0] } in
+        "car" )
+            echo "You typed car" ;;
+        "van" )
+            echo "You typed van" ;;
+        "truck" )
+            echo "You typed truck" ;;
+        * )
+            echo "Unknown input" ;;
+    esac
+```
+
+## Arrays
+
+```zsh
+
+    os=('ubuntu' 'windows' 'kali')
+
+    echo ${ os[0] }
+```
+
+To remove an element from the array :
+
+```zsh
+
+    unset os[2]
+```
+
+To add an element to the array :
+
+```zsh
+
+    os[3] = 'mac'
+```
+
+We can print all the elements of the array, or know the length of the array in this manner :
+
+```zsh
+
+    echo "${ os[@] } ${ #os[0] }"
+```
+
+## Loops
+
+* While loops
+
+```zsh
+
+    n=3
+
+    while [ "$n" < 3 ]
+    do
+        echo $n
+        n=$(( n+1 ))
+
+        # We can also use n=$(( n++ )) syntax 
+    done
+```
+
+We can read a file using the while loop, in the following way :
+
+```zsh
+
+    while read p
+    do
+        echo $p
+    done > output.txt
+```
+
+Bash also provides us with the until loop. Until loop executes the conditional block, until the condition is true.
+
+```zsh
+
+    num=1
+
+    until [ "$num" > "5" ]
+    do
+        echo $num
+        num=(( $num++ ))
+    done
+```
+
+For loops :
+
+```zsh
+
+    for i in 1 2 3 4 5
+    do
+        echo $i
+    done
+```
+
+We can provide the range of i using the '..' operator. After that, we can again use the '..' operator and mention the increment value of i, per loop.
+
+```zsh
+
+    for i in {1..10..2}
+    do
+        echo $i
+    done
+```
+
+We have the select loop, which prints lists in menu format. It also has casing support.
+
+```zsh
+
+    select name in "John" "Mark"
+    do
+        case $name in
+            "Mark" )
+                echo $name ;;
+        * )
+            echo "John"
+    done
+```
+
+## Breaks and Continues
+
+```zsh
+
+    for i in {1..10..1}
+    do
+        if [ "$i" > "3" && "$i" < "5" ]
+        then
+            continue
+        else if [ "i" > "7" ]
+            break
+        else
+            echo "$i"
+        fi
+    done
+```
+
+## Functions
+
+```zsh
+
+    function printHello(){
+
+        echo "Hello"
+    }
+
+    ## Execute the function
+    printHello
+```
+
+We can pass arguments to the function in this manner :
+
+```zsh
+
+    function name(){
+        name=$1
+
+        echo "$name"
+    }
+
+    name "Max"
+```
+
+By $1 we mean to access the 1st argument. If we want to access the nth argument, we will write '$<n>'.
+
+We can create local variables in this manner :
+
+```zsh
+
+    function name(){
+
+        local name=$1
+        echo "Local Variable - $name"
+    }
+
+    name="Max"
+
+    name "Archisman"
+    echo "Global variable - $name"
+```
+
+## Readonly variables and functions
+
+```zsh
+
+    name=5
+    readonly name
+
+    function printHey(){
+
+        echo "Hey"
+    }
+
+    readonly printHello
+```
+
+Now the variable name and the function printHey are both unchangeable. We can check the list of readonly variables and functions using these commands :
+
+```zsh
+
+    readonly -p
+    readonly -f
+```
+
+## Signal and trap
+
+If during the execution of our shell script, any exit signal is received, we can trap and kill it and print a message for that, without stopping our script from executing.
+
+```zsh
+
+    trap "Exit Signal detected" SIGKILL
+```
 
 ## Redirection
 
@@ -215,3 +466,15 @@ If we want to perform multiple redirection operations, with all the outputs in t
     # This syntax will be considered wrong and not redirect the second category of logs !
     ls . documents >output.txt
 ```
+
+For output redirection, if the file pre-exists, then the contents of the file are overriden. If we want to append to the contents to the file, we use the '>>' operatpor instead of '>'.
+
+## AWK Commands
+
+## SED Commands
+
+## GREP Commands
+
+## Scheduling jobs
+
+## tree views
